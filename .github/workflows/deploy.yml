@@ -15,13 +15,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Git clone repo
+      - name: Git clone repo and build images and push to docker hub
         uses: actions/checkout@v2
       - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - run: docker build -t mranmi/multy-client ./client
       - run: docker build -t mranmi/multy-nginx ./nginx
       - run: docker build -t mranmi/multy-server ./server
       - run: docker build -t mranmi/multy-worker ./worker
+      - run: docker push mranmi/multy-client
+      - run: docker push mranmi/multy-nginx
+      - run: docker push mranmi/multy-server
+      - run: docker push mranmi/multy-worker
  
       # - name: Generate deployment package
       #   run: zip -r ${{env.DEPLOY_PACKAGE_NAME}} ./ -x *.git*
@@ -40,14 +44,14 @@ jobs:
       - name: Print Happy message for build step finish
         run: echo "Builld images"
       
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v18
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-          application_name: ${{ env.EB_APPLICATION_NAME }}
-          environment_name: ${{ env.EB_ENVIRONMENT_NAME }}
-          existing_bucket_name: ${{ env.EB_PACKAGE_S3_BUCKET_NAME }}
-          region: ${{ env.AWS_REGION_NAME }}
-          version_label: ${{ github.sha }}
-          deployment_package: ${{ env.DEPLOY_PACKAGE_NAME }}
+      # - name: Deploy to EB
+      #   uses: einaregilsson/beanstalk-deploy@v18
+      #   with:
+      #     aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+      #     aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+      #     application_name: ${{ env.EB_APPLICATION_NAME }}
+      #     environment_name: ${{ env.EB_ENVIRONMENT_NAME }}
+      #     existing_bucket_name: ${{ env.EB_PACKAGE_S3_BUCKET_NAME }}
+      #     region: ${{ env.AWS_REGION_NAME }}
+      #     version_label: ${{ github.sha }}
+      #     deployment_package: ${{ env.DEPLOY_PACKAGE_NAME }}
