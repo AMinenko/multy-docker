@@ -20,8 +20,8 @@ services:
     image: 'mranmi/multy-nginx'
     ports:
       - '80:80'
-  server:
-    image: mranmi/multy-server
+  api:
+    image: 'mranmi/multy-server'
     hostname: api
     mem_limit: 128m
     environment:
@@ -33,7 +33,7 @@ services:
       - PGPASSWORD=$PGPASSWORD
       - PGPORT=$PGPORT
   worker:
-    image: 'mranmi/multy-wrker'
+    image: 'mranmi/multy-worker'
     hostname: worker
     mem_limit: 128m
     environment:
