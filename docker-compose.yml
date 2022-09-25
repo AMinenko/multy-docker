@@ -2,6 +2,7 @@ version: '3'
 services:
   client:
     image: 'mranmi/multy-client'
+    mem_limit: 128m
     hostname: client
     environment:
       - WDS_SOCKET_PORT=0
@@ -11,6 +12,7 @@ services:
     image: 'redis:latest'
   nginx:
     hostname: nginx
+    mem_limit: 128m
     depends_on:
       - api
       - client
@@ -21,7 +23,20 @@ services:
   server:
     image: mranmi/multy-server
     hostname: api
+    mem_limit: 128m
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - PGUSER=$PGUSER
+      - PGHOST=$PGHOST
+      - PGDATABASE=$PGDATABASE
+      - PGPASSWORD=$PGPASSWORD
+      - PGPORT=$PGPORT
   worker:
     image: 'mranmi/multy-wrker'
     hostname: worker
+    mem_limit: 128m
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
 
