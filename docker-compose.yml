@@ -6,20 +6,6 @@ services:
     hostname: client
     environment:
       - WDS_SOCKET_PORT=0
-  postgres:
-    image: 'postgres:latest'
-  redis:
-    image: 'redis:latest'
-  nginx:
-    hostname: nginx
-    mem_limit: 128m
-    depends_on:
-      - api
-      - client
-    restart: always
-    image: 'mranmi/multy-nginx'
-    ports:
-      - '80:80'
   api:
     image: 'mranmi/multy-server'
     hostname: api
@@ -31,7 +17,6 @@ services:
       - PGHOST=$PGHOST
       - PGDATABASE=$PGDATABASE
       - PGPASSWORD=$PGPASSWORD
-      - PGPORT=$PGPORT
   worker:
     image: 'mranmi/multy-worker'
     hostname: worker
@@ -39,4 +24,15 @@ services:
     environment:
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
-
+  nginx:
+    hostname: nginx
+    mem_limit: 128m
+    depends_on:
+      - api
+      - client
+    restart: always
+    image: 'mranmi/multy-nginx'
+    ports:
+      - '80:80'
+      - PGPORT=$PGPORT
+ 
