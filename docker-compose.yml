@@ -17,6 +17,7 @@ services:
       - PGHOST=$PGHOST
       - PGDATABASE=$PGDATABASE
       - PGPASSWORD=$PGPASSWORD
+      - PGPORT=$PGPORT
   worker:
     image: 'mranmi/multy-worker'
     hostname: worker
@@ -34,5 +35,3 @@ services:
     image: 'mranmi/multy-nginx'
     ports:
       - '80:80'
-      - PGPORT=$PGPORT
- 
